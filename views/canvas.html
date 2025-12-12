@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Infinite Canvas</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            background: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="myCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Fullscreen canvas
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Camera state (panning + zoom)
+        let offsetX = 0;
+        let offsetY = 0;
+        let scale = 1;
+
+        // Dragging
+        let isDragging = false;
+        let startX, startY;
+
+        // Draw function
+        function draw() {
+            ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
+            ctx.clearRect(-offsetX, -offsetY, canvas.width / scale, canvas.height / scale);
+
+            // Example shapes (in infinite world)
+            ctx.fillStyle = "red";
+            ctx.fillRect(0, 0, 200, 200);
+
+            ctx.fillStyle = "blue";
+            ctx.fillRect(400, 200, 200, 200);
+
+            ctx.fillStyle = "green";
+            ctx.fillRect(-300, -200, 150, 150);
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+
+        // Mouse drag for panning
+        canvas.addEventListener("mousedown", (e) => {
+            isDragging = true;
+            startX = e.clientX - offsetX;
+            startY = e.clientY - offsetY;
+        });
+
+        canvas.addEventListener("mouseup", () => {
+            isDragging = false;
+        });
+
+        canvas.addEventListener("mousemove", (e) => {
+            if (isDragging) {
+                offsetX = e.clientX - startX;
+                offsetY = e.clientY - startY;
+            }
+        });
+
+        // Zoom with mouse wheel
+        canvas.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            const zoom = 1.1;
+
+            if (e.deltaY < 0) {
+                scale *= zoom; // zoom in
+            } else {
+                scale /= zoom; // zoom out
+            }
+        });
+    </script>
+</body>
+
+</html>
