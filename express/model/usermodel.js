@@ -4,9 +4,7 @@ mongoose.connect("mongodb://localhost:27017/training")
 
 const userSchema = mongoose.Schema(
     {
-        name: String,
-        email: String,
-        phone: Number,
+        username: String,
         password: String,
 
     }
